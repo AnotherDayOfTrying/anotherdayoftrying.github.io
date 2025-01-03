@@ -17,7 +17,9 @@ import Drawer from './components/Drawer.vue'
 </template>
 
 <style scoped>
-
+main {
+  overflow: hidden;
+}
 @media (min-width: 1024px) {
 
 }

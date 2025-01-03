@@ -28,6 +28,7 @@ export default {
 <template>
     <Drawer v-model:visible="visible" header="Drawer" position="right" :style="drawerStyle">
         <template #container>
+            <slot name="drawer-content"></slot>
             <div @click="visible = false" class='button-location'>
                 <i class="pi pi-chevron-right"></i>
             </div>
