@@ -1,5 +1,44 @@
 <script setup>
 import DrawerItem from './DrawerItem.vue';
+import Carousel from 'primevue/carousel';
+import ZenZone from '@/assets/zenzone.png'
+import HelloWorld  from '@/assets/helloworld.png';
+import HabitsTracker from '@/assets/habitstracker.png'
+</script>
+
+<script>
+export default {
+    data() {
+        return ['projects']
+    },
+    created() {
+        this.projects = [
+            {
+                url: 'https://github.com/ECE-493-Group-20/ZenZone',
+                image: ZenZone,
+                name: 'ZenZone',
+                description: 'Location Activity Tracker',
+                skills: 'JS/TS, CI/CD, React, GCP',
+            },
+            {
+                url: 'https://github.com/AnotherDayOfTrying/hello_world',
+                image: HelloWorld,
+                name: 'Hello_World',
+                description: 'Distributed Social Platform',
+                skills: 'Python, CI/CD, React, Heroku',
+            },
+            {
+                url: 'https://github.com/CMPUT301F21T49/HabitsTracker',
+                image: HabitsTracker,
+                name: 'Habit Tracker',
+                description: 'Personal Habit Tracker',
+                skills: 'Android, Java',
+                color: {color: '#333'},
+            }
+        ]
+    }
+}
+
 </script>
 
 <template>
@@ -10,7 +49,7 @@ import DrawerItem from './DrawerItem.vue';
                     <i class="pi pi-book"></i>
                 </template>
                 <template #drawer-content>
-                    <div class="resume">
+                    <div class="center-card">
                         <div class="resume-card">
                             <h1>Academic</h1>
                             <h3>Computer Engineering w/ Software Specialization, BSc Co-op, 2024</h3>
@@ -58,7 +97,22 @@ import DrawerItem from './DrawerItem.vue';
                     <i class="pi pi-folder"></i>
                 </template>
                 <template #drawer-content>
-
+                    <div class="center-card">
+                        <Carousel :value="projects" vertical-view-port-height="100%" :num-visible="1" circular :show-indicators="false">
+                            <template #item="project">
+                                <div class="project-card">
+                                    <a :href="project.data.url" >
+                                        <img :src="project.data.image" />
+                                        <h1 :style="project.data.color">{{ project.data.name }}</h1>
+                                        <p :style="project.data.color">
+                                            {{ project.data.description }} <br>
+                                            Skills: {{ project.data.skills }}
+                                        </p>
+                                    </a>
+                                </div>
+                            </template>
+                        </Carousel>
+                    </div>
                 </template>
             </DrawerItem>
             <DrawerItem color="#121922" name="About Me">
@@ -87,18 +141,71 @@ import DrawerItem from './DrawerItem.vue';
     overflow: hidden;
 }
 
-.tab {
-    width: 4rem;
-    height: 4rem;
-    background-color: aqua;
-}
-
-.resume {
+.center-card {
     width: 100vw;
     height: 100vh;
+    padding: 5rem;
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
+}
+
+a {
+    color: var(--color-text);
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+}
+
+.p-carousel {
+    width: 100%;
+    /* height: 100%; */
+    margin: auto;
+}
+
+.p-carousel-content-container {
+    align-items: center;
+    justify-content: center;
+}
+
+.project-card {
+    border-radius: 10px;
+    margin: 10%;
+    padding: 1rem;
+    position: relative;
+}
+
+.project-card > a > img {
+    width: 100%;
+    height: 60vh;
+    border-radius: 10px;
+    transition: box-shadow 0.5s;
+    object-fit: cover;
+}
+
+.project-card > a > img:hover {
+    box-shadow: var(--color-text) 0 0 2px 2px;
+}
+
+.project-card > a > h1 {
+    position: absolute;
+    bottom: 1rem;
+    right: 0;
+    font-weight: 900;
+    font-size: 3em;
+    transform-origin: bottom right;
+    transform: rotate(-90deg) translate(100%, 0%);
+    white-space: nowrap;
+}
+
+.project-card > a > p {
+    position: absolute;
+    bottom: 2em;
+    left: 1em;
+    font-size: x-small;
+    white-space: nowrap;
 }
 
 .resume-card {
@@ -106,8 +213,20 @@ import DrawerItem from './DrawerItem.vue';
     height: 80vh;
     overflow-y: scroll;
 }
-
+/* 
 ::-webkit-scrollbar {
     width: 0;
+} */
+
+@media (max-width: 1024px) {
+    .project-card > a > h1 {
+        /* bottom: 2em; */
+        font-size: 1.5em;
+        /* white-space: nowrap; */
+    }
+
+    .project-card > a > p {
+        display: none;
+    }
 }
 </style>

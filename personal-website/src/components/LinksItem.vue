@@ -26,11 +26,14 @@ export default {
     display: flex;
     position: relative;
     fill: var(--color-text);
-    transition: fill 0.1s;
   }
 
   .item:hover {
     fill: #ed6b35;
+  }
+
+  a {
+    transition: fill 0.5s;
   }
   
   

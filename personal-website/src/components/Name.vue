@@ -66,5 +66,11 @@ h1 {
     /* background-color: ; */
     display: flex;
     place-content: center;
+    z-index: 9999;
 }
+
+  @media (min-width: 1024px) {
+
+  }
+
 </style>

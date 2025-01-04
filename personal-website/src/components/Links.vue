@@ -26,11 +26,11 @@ import IconYoutube from './icons/IconYoutube.vue'
                     <IconLinkedin />
                 </template>
             </LinksItem>
-            <LinksItem name="Instagram" src="./404">
+            <!-- <LinksItem name="Instagram" src="./404">
                 <template #icon>
                     <IconInstagram />
                 </template>
-            </LinksItem>
+            </LinksItem> -->
             <LinksItem name="Twitch" src="https://www.twitch.tv/01adot">
                 <template #icon>
                     <IconTwitch />
