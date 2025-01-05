@@ -8,7 +8,7 @@ export default {
   data() {
     return {visible: false}
   },
-  props: ['color', 'name'],
+  props: ['color', 'name', 'callback'],
   computed: {
     background() {
         return {
@@ -21,15 +21,15 @@ export default {
             "background-color": this.color,
         }
     }
-  }
+  },
 }
 </script>
 
 <template>
-    <Drawer v-model:visible="visible" header="Drawer" position="right" :style="drawerStyle">
+    <Drawer v-model:visible="visible" header="Drawer" position="right" :style="drawerStyle" >
         <template #container>
             <slot name="drawer-content"></slot>
-            <div @click="visible = false" class='button-location'>
+            <div @click="visible = false; if (callback) callback(false);" class='button-location'>
                 <i class="pi pi-chevron-right"></i>
             </div>
         </template>
@@ -100,6 +100,7 @@ export default {
     position: absolute;
     right: 0;
     top: 0;
+    cursor: pointer;
 }
 
 .button-location > i {
@@ -123,7 +124,7 @@ export default {
   
   
   @media (min-width: 1024px) {
-
+    
   }
   </style>
   

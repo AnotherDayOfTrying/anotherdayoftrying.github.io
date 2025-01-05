@@ -1,15 +1,19 @@
 <script setup>
 import DrawerItem from './DrawerItem.vue';
 import Carousel from 'primevue/carousel';
+import Timeline from 'primevue/timeline';
+import Tag from 'primevue/tag';
+import Chip from 'primevue/chip';
 import ZenZone from '@/assets/zenzone.png'
 import HelloWorld  from '@/assets/helloworld.png';
 import HabitsTracker from '@/assets/habitstracker.png'
+import Me from '@/assets/me.jpeg'
 </script>
 
 <script>
 export default {
     data() {
-        return ['projects']
+        return ['projects', 'overlay', 'nameStyle', 'nameToLocation', 'toggle', 'workExperience']
     },
     created() {
         this.projects = [
@@ -33,15 +37,73 @@ export default {
                 name: 'Habit Tracker',
                 description: 'Personal Habit Tracker',
                 skills: 'Android, Java',
-                color: {color: '#333'},
+                color: {color: '#333333aa'},
             }
         ]
+        this.toggle = false
+        this.workExperience = [
+            {
+                date: "May 2022 - Aug 2023",
+                title: "Cloud DevOps Intern",
+                company: "Nutrien",
+                tasks: [
+                    "Implemented role-based access control on an internal platform requiring work with React, .NET, AWS Cloud Infrastructure, and PostgreSQL",
+                    "Enhanced 200+ repositories with CircleCI CI/CD pipelines, custom CircleCI Orbs, and SonarQube streamlining the development process and ensuring code quality",
+                    "Created CLI tools to standardize GitHub repository settings and AWS configurations",
+                    "Deployed AWS infrastructure for automated key rotation and merging development branches",
+                    "Monitored, identified, and resolved application bottlenecks with SIEM tools",
+                ]
+            },
+            {
+                date: "May 2021 - Aug 2021",
+                title: "Research Assistant",
+                company: "University of Alberta",
+                tasks: [
+                    "Responsible for full-stack development of riverice.ca using Next.js and Firebase services",
+                    "Authored a comprehensive user manual detailing usage instructions and functionalities for a river ice analysis program coded in C and C++",
+                ]
+            },
+        ]
+    },
+    mounted() {
+        this.overlay = {
+            left: document.getElementById('github').getBoundingClientRect().left + 45 + 'px',
+            top: document.getElementById('github').getBoundingClientRect().top + - 15 + 'px',
+        }
+    },
+    methods: {
+        moveName(toggle) {
+            if (window.innerWidth < 1024) {
+                return
+            }
+            if (toggle) {
+                const aboutMe = document.getElementById('about-me').getBoundingClientRect()
+                this.nameToLocation = {
+                    bottom: aboutMe.bottom + 30 + 'px',
+                    left: aboutMe.left + 'px',
+                }
+                this.nameStyle = document.getElementById('my-name').style
+                document.getElementById('my-name').style = `bottom: ${this.nameToLocation.bottom}; left: ${this.nameToLocation.left}; font-size: 4vw; translation: transform(50%, 50%)`
+            } else {
+                document.getElementById('my-name').style = this.nameStyle
+            }   
+        }
     }
-}
-
+}    
 </script>
 
 <template>
+    <div class="center-card about-me-card hidden">
+        <div id="about-me" class="hide">
+            I want to build cool things.<br>
+            Hopefully they don't break...<br><br>
+
+            Email: <span class="highlight">javierjustin7@gmail.com</span>
+        </div>
+        <div class="hide">
+            <img class="image-me" :src="Me">
+        </div>
+    </div>
     <div class="screen">
         <div class="container">
             <DrawerItem color="#285c69" name="Resume">
@@ -51,43 +113,73 @@ export default {
                 <template #drawer-content>
                     <div class="center-card">
                         <div class="resume-card">
-                            <h1>Academic</h1>
+                            <div class="resume-title"><i class="pi pi-graduation-cap pi-resume-icons"></i><h1>Academic</h1></div>
                             <h3>Computer Engineering w/ Software Specialization, BSc Co-op, 2024</h3>
                             <h4>University of Alberta | Edmonton, Alberta</h4>
-                            <b>Grade Point Average(GPA): 3.7/4.0</b>
-                            <br />
-                            <br />
-                            <hr />
-                            <br />
-                            <br />
-                            <h1>Work Experience</h1>
-                            <h2>Cloud DevOps Intern May 2022 - Aug 2023</h2>
-                            <h3>Nutrien</h3>
-                            <ul>
-                                <li>Implemented role-based access control on an internal platform requiring work with React, .NET, AWS Cloud Infrastructure, and PostgreSQL</li>
-                                <li>Enhanced 200+ repositories with CircleCI CI/CD pipelines, custom CircleCI Orbs, and SonarQube streamlining the development process and ensuring code quality</li>
-                                <li>Created CLI tools to standardize GitHub repository settings and AWS configurations</li>
-                                <li>Deployed AWS infrastructure for automated key rotation and merging development branches</li>
-                                <li>Monitored, identified, and resolved application bottlenecks with SIEM tools</li>
-                            </ul>
-                            <h2>Research Assistant May 2021 - Aug 2021</h2>
-                            <h3>University of Alberta</h3>
-                            <ul>
-                                <li>Responsible for full-stack development of riverice.ca using Next.js and Firebase services</li>
-                                <li>Authored a comprehensive user manual detailing usage instructions and functionalities for a river ice analysis program coded in C and C++ </li>
-                            </ul>
-                            <br />
-                            <br />
-                            <hr />
-                            <br />
-                            <br />
-                            <h1>Technical Skills</h1>
-                            <p><b>Programming Languages:</b> Python, TypeScript/JavaScript, C#, Java, SQL, C++, HTML5, CSS3</p>
-                            <p><b>Frameworks:</b> React, Django, Next.js, Android</p> 
-                            <p><b>Database Management Systems:</b> PostgreSQL, MongoDB</p>
-                            <p><b>Cloud Computing:</b> AWS, Firebase, Heroku</p>
-                            <p><b>DevOps:</b> CircleCI, GitHub Actions, Splunk, Docker, Git, SonarQube</p>
-                            <p><b>Certificates:</b> Google Cyber Security Certificate</p>
+                            <b>Grade Point Average(GPA): <Tag value="3.7/4.0"></Tag></b>
+                            <br>
+                            <br>
+                            <hr>
+                            <br>
+                            <div class="resume-title"><i class="pi pi-briefcase pi-resume-icons"></i><h1>Work Experience</h1></div>
+                            <Timeline :value="workExperience">
+                                <template #content="slotProps">
+                                    <div>
+                                        <div><strong>{{ slotProps.item.date }}</strong></div>
+                                        <div>
+                                            <h2>{{ slotProps.item.title }}</h2>
+                                            <h3>{{ slotProps.item.company }}</h3>
+                                            <ul>
+                                                <li v-for="task in slotProps.item.tasks">{{ task }}</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </template>
+                            </Timeline>
+                            <br>
+                            <hr>
+                            <br>
+                            <div class="resume-title"><i class="pi pi-list-check pi-resume-icons"></i><h1>Technical Skills</h1></div>
+                            <h3>Programming Languages</h3>
+                            <div>
+                                <Chip>Python</Chip>
+                                <Chip>Typescript/Javascript</Chip>
+                                <Chip>C#</Chip>
+                                <Chip>Java</Chip>
+                                <Chip>SQL</Chip>
+                                <Chip>HTML5/CSS3</Chip>
+                            </div>
+                            <h3>Frameworks</h3>
+                            <div>
+                                <Chip>React</Chip>
+                                <Chip>Django</Chip>
+                                <Chip>Next.js</Chip>
+                                <Chip>Android</Chip>
+                            </div>
+                            <h3>Database Management Systems</h3>
+                            <div>
+                                <Chip>PostgreSQL</Chip>
+                                <Chip>MongoDB</Chip>    
+                            </div>
+                            <h3>Cloud Computing</h3>
+                            <div>
+                                <Chip>AWS</Chip>
+                                <Chip>Firebase</Chip>
+                                <Chip>Heroku</Chip>
+                            </div>
+                            <h3>DevOps</h3>
+                            <div>
+                                <Chip>Git</Chip>
+                                <Chip>CircleCI</Chip>
+                                <Chip>Github Actions</Chip>
+                                <Chip>Splunk</Chip>
+                                <Chip>Docker</Chip>
+                                <Chip>SonarQube</Chip>                                
+                            </div>
+                            <h3>Certificates</h3>
+                            <div>
+                                <Chip>Google Cyber Security Certificate</Chip>
+                            </div>
                         </div>
                     </div>
                 </template>
@@ -97,8 +189,9 @@ export default {
                     <i class="pi pi-folder"></i>
                 </template>
                 <template #drawer-content>
+                    <div class="github-pointer" :style="overlay"><- check out my other projects</div>
                     <div class="center-card">
-                        <Carousel :value="projects" vertical-view-port-height="100%" :num-visible="1" circular :show-indicators="false">
+                        <Carousel :value="projects" vertical-view-port-height="100%" :num-visible="1" circular :show-indicators="false" :autoplayInterval="3000">
                             <template #item="project">
                                 <div class="project-card">
                                     <a :href="project.data.url" >
@@ -115,12 +208,22 @@ export default {
                     </div>
                 </template>
             </DrawerItem>
-            <DrawerItem color="#121922" name="About Me">
+            <DrawerItem color="#121922" name="About Me" :callback="moveName">
                 <template #icon>
                     <i class="pi pi-id-card"></i>
                 </template>
                 <template #drawer-content>
-                    
+                    <div class="center-card about-me-card">
+                        <div @vue:mounted="moveName(true)">
+                            I just want to build cool things.<br>
+                            <br><br>
+
+                            Email: <span class="highlight">javierjustin7@gmail.com</span>
+                        </div>
+                        <div>
+                            <img class="image-me" :src="Me">
+                        </div>
+                    </div>
                 </template>
             </DrawerItem>
 
@@ -139,6 +242,18 @@ export default {
     align-items: center;
     flex-direction: row-reverse;
     overflow: hidden;
+}
+
+.hidden {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 0;
+}
+
+.hide {
+    visibility: hidden;
 }
 
 .center-card {
@@ -175,6 +290,13 @@ a {
     margin: 10%;
     padding: 1rem;
     position: relative;
+    animation-name: float;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+}
+
+.project-card:hover {
+    animation: none;
 }
 
 .project-card > a > img {
@@ -212,7 +334,54 @@ a {
     width: 60vw;
     height: 80vh;
     overflow-y: scroll;
+    border: 1px black solid;
+    padding: 1rem;
+    background-color: #121922;
+    transition: box-shadow 1s;
 }
+
+.resume-card:hover {
+    box-shadow: var(--color-text) 0 0 2px 2px;
+}
+
+.resume-title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+@keyframes float {
+    0%      {transform: rotate(0deg);}
+    25%     {transform: rotate(0.5deg);}
+    50%     {transform: rotate(0deg);}
+    75%     {transform: rotate(-0.75deg);}
+    100%    {transform: rotate(0deg);}
+}
+
+.github-pointer {
+    font-family: 'Courier New', Courier, monospace;
+    position: absolute;
+    transform-origin: bottom left;
+    rotate: -30deg;
+    z-index: 9999999;
+}
+
+.about-me-card {
+    justify-content: space-around;
+    align-items: center;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.image-me {
+    width: 300px;
+    height: 400px;
+    object-fit: cover;
+}
+
+.highlight {
+  color: #ed6b35;
+}
+
 /* 
 ::-webkit-scrollbar {
     width: 0;
@@ -227,6 +396,27 @@ a {
 
     .project-card > a > p {
         display: none;
+    }
+
+    .about-me-card {
+        flex-direction: column;
+    }
+    
+    .image-me {
+        width: 240px;
+        height: 320px
+    }
+    .resume-card > * {
+        font-size: 0.5rem;
+    }
+    .resume-card > * > h1 {
+        font-size: 1rem;
+    }
+    .resume-card > * > h2 {
+        font-size: 0.75rem;
+    }
+    .resume-card > * > h3 {
+        font-size: 0.5rem;
     }
 }
 </style>

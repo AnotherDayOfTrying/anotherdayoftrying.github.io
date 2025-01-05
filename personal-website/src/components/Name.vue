@@ -12,7 +12,7 @@ export default {
 </script>
 
 <template>
-    <h1>Justin Javier</h1>
+    <h1 id="my-name">Justin Javier</h1>
     <div class="overview">
         <div class="marquee">
             <div class="track">
@@ -30,6 +30,11 @@ h1 {
     bottom: 1.5rem;
     left: 1.5rem;
     z-index: 9999;
+    transform-origin: center bottom;
+    transition: 
+      left 2s ease-in-out,
+      bottom 2s ease-in-out,
+      font-size 2s ease-in-out;
 }
 
 .marquee {

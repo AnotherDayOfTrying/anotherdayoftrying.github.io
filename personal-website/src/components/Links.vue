@@ -11,7 +11,7 @@ import IconYoutube from './icons/IconYoutube.vue'
 <template>
     <div class="screen">
         <div class="container">
-            <LinksItem name="Github" src="https://github.com/AnotherDayOfTrying">
+            <LinksItem ref="github" id="github" name="Github" src="https://github.com/AnotherDayOfTrying">
                 <template #icon>
                     <IconGithub />
                 </template>
