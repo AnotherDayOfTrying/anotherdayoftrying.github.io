@@ -27,7 +27,7 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: cd personal-website && npm i && npm build
+        run: cd personal-website && npm i && npm run build
 
     # Deploy job
   deploy:
