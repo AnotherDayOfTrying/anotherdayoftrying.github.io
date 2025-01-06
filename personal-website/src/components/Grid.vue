@@ -2,11 +2,21 @@
     import * as THREE from 'three';
     import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
     import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+    import { WebGL } from 'three/examples/jsm/Addons.js';
 </script>
 
 <script>
     export default {
         mounted () {
+            if (window.innerWidth < 1024) {
+                return
+            }
+            
+            if (!WebGL.isWebGL2Available()) {
+                console.error(WebGL.getWebGL2ErrorMessage().textContent)
+                return
+            }
+
             const grid = document.getElementById('grid')
             const gridDims = grid.getBoundingClientRect()
             const windowHeight = gridDims.height
@@ -35,8 +45,8 @@
 
                 controls.update();
 
-                // cube.rotation.x += 0.01
-                // cube.rotation.y += 0.01
+                cube.rotation.x += 0.01
+                cube.rotation.y += 0.01
                 renderer.render(scene, camera)
             }
         }

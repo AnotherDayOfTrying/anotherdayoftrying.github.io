@@ -95,8 +95,9 @@ export default {
 <template>
     <div class="center-card about-me-card hidden">
         <div id="about-me" class="hide">
-            I want to build cool things.<br>
-            Hopefully they don't break...<br><br>
+            <h3>Aspiring Software Engineer</h3>
+            I just want to build <span class='highlight'>cool things</span> with <span class='highlight'>cool people</span>.<br>
+            <br><br>
 
             Email: <span class="highlight">javierjustin7@gmail.com</span>
         </div>
@@ -215,9 +216,10 @@ export default {
                 <template #drawer-content>
                     <div class="center-card about-me-card">
                         <div @vue:mounted="moveName(true)">
-                            I just want to build cool things.<br>
-                            <br><br>
-
+                            <h2 class="about-me-h2">Software Engineer</h2>
+                            <br>
+                            I just want to build <span class='highlight'>cool things</span> with <span class='highlight'>cool people</span>.<br>
+                            <br>
                             Email: <span class="highlight">javierjustin7@gmail.com</span>
                         </div>
                         <div>
@@ -232,6 +234,10 @@ export default {
 </template>
 
 <style scoped>
+.about-me-h2 {
+    font-family: 'SaucerBB';
+}
+
 .screen {
     position: absolute;
     right: 0;
@@ -418,6 +424,10 @@ a {
     }
     .resume-card > * > h3 {
         font-size: 0.5rem;
+    }
+
+    .github-pointer {
+        font-size: 0.75rem;
     }
 }
 </style>
