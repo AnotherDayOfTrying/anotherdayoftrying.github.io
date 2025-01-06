@@ -10,7 +10,7 @@ import Drawer from './components/Drawer.vue'
 <template>
   <main>
     <Name />
-    <Links ref="links"/>
+    <Links />
     <Drawer />
     <Grid />
   </main>

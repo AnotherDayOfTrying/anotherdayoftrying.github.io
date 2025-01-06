@@ -242,6 +242,7 @@ export default {
     align-items: center;
     flex-direction: row-reverse;
     overflow: hidden;
+    z-index: 2;
 }
 
 .hidden {
