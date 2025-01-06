@@ -28,6 +28,12 @@ jobs:
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: cd personal-website && npm i && npm run build
+      
+      - name: test
+        uses: actions/upload-artifact@v4
+        with:
+            name: 'github-pages'
+            path: './dist/**'
 
     # Deploy job
   deploy:
@@ -49,6 +55,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4 # or specific "vX.X.X" version tag for this action
-        with:
-            publish_dir: ./dist # deploy dist folder
+        uses: actions/deploy-pages@v4 # or specific "vX.X.X" version tag for this actionr
