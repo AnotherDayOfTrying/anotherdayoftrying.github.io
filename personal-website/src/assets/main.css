@@ -1,0 +1,60 @@
+@import './base.css';
+@import 'primeicons/primeicons.css';
+
+#app {
+  font-weight: normal;
+}
+
+a,
+.green {
+  text-decoration: none;
+  color: hsla(160, 100%, 37%, 1);
+  transition: 0.4s;
+  padding: 3px;
+}
+
+.p-timeline-event-opposite {
+  display: none !important;
+}
+
+.p-timeline-event-marker {
+  border-radius: 0;
+}
+
+.p-timeline-event-marker::before {
+  background: #ed6b35 !important;
+}
+
+.p-tag {
+  color: #ed6b35 !important;
+  background-color: #1a2a35 !important;
+}
+
+.p-chip {
+  margin-right: 0.25rem;
+}
+
+.pi-resume-icons {
+  font-size: 2rem !important;
+  margin-right: 1rem;
+}
+
+@media (max-width: 1024px) {
+  .p-tag {
+    font-size: 0.5rem !important;
+  }
+
+  .p-chip {
+    font-size: 0.5rem !important;
+  }
+
+  .pi-resume-icons {
+    font-size: 1rem !important;
+    margin-right: 0.5rem;
+  }
+}
+
+@font-face {
+  font-family: 'SaucerBB';
+  src: local('SaucerBB'), url('./fonts/saucer-bb.regular.ttf') format('ttf');
+}
