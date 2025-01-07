@@ -10,7 +10,7 @@
 }
 
 .p-timeline-event-marker {
-  border-radius: 0;
+  border-radius: 0px !important;
 }
 
 .p-timeline-event-marker::before {
@@ -31,6 +31,10 @@
   margin-right: 1rem;
 }
 
+.p-drawer {
+  color: inherit !important;
+}
+
 @media (max-width: 1024px) {
   .p-tag {
     font-size: 0.5rem !important;
@@ -48,5 +52,5 @@
 
 @font-face {
   font-family: 'SaucerBB';
-  src: local('SaucerBB'), url('./fonts/saucer-bb.regular.ttf') format('ttf');
+  src: local('SaucerBB'), url('./assets/saucer-bb.regular.ttf') format('ttf');
 }
