@@ -1,5 +1,11 @@
 @import './base.css';
 @import 'primeicons/primeicons.css';
+@font-face {
+  font-family: 'SaucerBB';
+  src: local('SaucerBB'), url('/saucer-bb.regular.ttf');
+}
+
+
 
 #app {
   font-weight: normal;
@@ -48,9 +54,4 @@
     font-size: 1rem !important;
     margin-right: 0.5rem;
   }
-}
-
-@font-face {
-  font-family: 'SaucerBB';
-  src: local('SaucerBB'), url('./saucer-bb.regular.ttf') format('ttf');
 }
