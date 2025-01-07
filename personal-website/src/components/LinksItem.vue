@@ -27,15 +27,16 @@ export default {
     position: relative;
     fill: var(--color-text);
   }
+  
+  a {
+    fill: var(--color-text);
+    transition: fill 0.5s;
 
-  .item:hover {
+  }
+
+  a:hover {
     fill: #ed6b35;
   }
-
-  a {
-    transition: fill 0.5s;
-  }
-  
   
   @media (min-width: 1024px) {
     
