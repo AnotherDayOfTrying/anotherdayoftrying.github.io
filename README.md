@@ -1,0 +1,1 @@
+to deploy, run build locally and move outside of dist folder
