@@ -52,5 +52,5 @@
 
 @font-face {
   font-family: 'SaucerBB';
-  src: local('SaucerBB'), url('./assets/saucer-bb.regular.ttf') format('ttf');
+  src: local('SaucerBB'), url('./saucer-bb.regular.ttf') format('ttf');
 }
