@@ -395,6 +395,19 @@ a {
 } */
 
 @media (max-width: 1024px) {
+    .github-pointer {
+        display: none;
+    }
+
+
+    .project-card { 
+        margin: 0;
+    }
+
+    .center-card {
+        padding: 3rem;
+    }
+
     .project-card > a > h1 {
         /* bottom: 2em; */
         font-size: 1.5em;
@@ -413,6 +426,11 @@ a {
         width: 240px;
         height: 320px
     }
+
+    .resume-card {
+        width: 70vw;
+    }
+
     .resume-card > * {
         font-size: 0.5rem;
     }

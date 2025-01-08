@@ -5,11 +5,10 @@
   src: local('SaucerBB'), url('/saucer-bb.regular.ttf');
 }
 
-
-
 #app {
   font-weight: normal;
 }
+
 
 .p-timeline-event-opposite {
   display: none !important;
@@ -17,6 +16,12 @@
 
 .p-timeline-event-marker {
   border-radius: 0px !important;
+  background: none !important;
+  border-color: #3f3f46 !important;
+}
+
+.p-timeline-event-connector {
+  background: #3f3f46 !important;
 }
 
 .p-timeline-event-marker::before {
@@ -29,7 +34,11 @@
 }
 
 .p-chip {
-  margin-right: 0.25rem;
+  margin-right: 0.25rem !important;
+  background: #27272a !important;
+  color: #ffffff !important;
+  padding: 5px !important;
+  border-radius: 3px !important;
 }
 
 .pi-resume-icons {
@@ -39,6 +48,7 @@
 
 .p-drawer {
   color: inherit !important;
+  border: none !important;
 }
 
 @media (max-width: 1024px) {

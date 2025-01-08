@@ -56,4 +56,10 @@ import IconYoutube from './icons/IconYoutube.vue'
     display: flex;
     position: relative;
 }
+
+@media (max-width: 1024px) {
+    .screen {
+        z-index: 10;
+    }
+}
 </style>

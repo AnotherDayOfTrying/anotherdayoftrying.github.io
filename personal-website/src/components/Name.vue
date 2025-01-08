@@ -12,7 +12,9 @@ export default {
 </script>
 
 <template>
+  <div class="screen">
     <h1 id="my-name">Justin Javier</h1>
+  </div>
     <div class="overview">
         <div class="marquee">
             <div class="track">
@@ -27,14 +29,22 @@ h1 {
     font-family: 'SaucerBB';
     font-size: 2rem;
     position: absolute;
-    bottom: 1.5rem;
-    left: 1.5rem;
+    bottom: 30px;
+    left: 30px;
     z-index: 9999;
     transform-origin: center bottom;
     transition: 
       left 2s ease-in-out,
       bottom 2s ease-in-out,
       font-size 2s ease-in-out;
+}
+
+.screen {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
 .marquee {
@@ -74,8 +84,14 @@ h1 {
     z-index: 9999;
 }
 
-  @media (min-width: 1024px) {
+  @media (max-width: 1024px) {
+    .overview {
+      z-index: 1;
+    }
 
+    h1 {
+      z-index: 1;
+    }
   }
 
 </style>
