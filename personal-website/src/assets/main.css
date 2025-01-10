@@ -51,6 +51,11 @@
   border: none !important;
 }
 
+.calculate.p-button {
+  background: #ed6b35 !important;
+  border: #ed6b35 !important;
+}
+
 @media (max-width: 1024px) {
   .p-tag {
     font-size: 0.5rem !important;
