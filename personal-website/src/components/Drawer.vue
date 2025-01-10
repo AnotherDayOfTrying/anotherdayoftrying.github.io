@@ -382,7 +382,7 @@ a {
 .image-me {
     width: 300px;
     height: 400px;
-    object-fit: cover;
+    object-fit: scale-down;
 }
 
 .highlight {

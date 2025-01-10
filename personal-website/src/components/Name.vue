@@ -86,11 +86,11 @@ h1 {
 
   @media (max-width: 1024px) {
     .overview {
-      z-index: 1;
+      z-index: 2;
     }
 
     h1 {
-      z-index: 1;
+      z-index: 2;
     }
   }
 
