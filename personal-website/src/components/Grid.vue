@@ -7,8 +7,8 @@
     import SelectButton from 'primevue/selectbutton';
     import Button from 'primevue/button';
     import Toast from 'primevue/toast'
+    import Popover from 'primevue/popover'
     import { useToast } from 'primevue/usetoast';
-    import { useDialog } from 'primevue/usedialog';
 </script>
 
 <script lang="ts">
@@ -35,6 +35,10 @@
             }
         },
         mounted () {
+            if (!WebGL.isWebGL2Available()) {
+                console.error(WebGL.getWebGL2ErrorMessage().textContent)
+                return
+            }
             const toast = useToast()
             const TILE_COLORS = {
                 'start': 0x008000,
@@ -51,57 +55,46 @@
             const windowHeight = gridDims.height
             const windowWidth = gridDims.width
 
+            const sceneMobile = new THREE.Scene();
             const scene = new THREE.Scene();
             const camera = new THREE.PerspectiveCamera(75, windowWidth/windowHeight, 0.1, 1000);
             const renderer = new THREE.WebGLRenderer();
             const controls = new OrbitControls(camera, renderer.domElement)
             renderer.setSize(windowWidth, windowHeight)
             grid.appendChild(renderer.domElement)
+            sceneMobile.background = new THREE.Color(0x181818)
             scene.background = new THREE.Color(0x181818)
 
-            const onWindowResize = () => {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            }
 
-            window.addEventListener('resize', onWindowResize, false);
-
-
-
-            if (window.innerWidth < 1024) {
+            // if (window.innerWidth < 1024) {
                 const loader = new GLTFLoader()
                 loader.load('./test_model.glb', (data) => {
-                    scene.add(data.scene)
+                    sceneMobile.add(data.scene)
                 })
                 const geometry = new THREE.BoxGeometry(1, 1, 1);
                 const material = new THREE.MeshBasicMaterial( {color: TILE_COLORS['default']} )
                 const cube = new THREE.Mesh( geometry, material )
-                scene.add(cube)
+                sceneMobile.add(cube)
 
-                camera.position.set(0, 0, 5);
-                controls.update();
+                const ambientLightMobile = new THREE.AmbientLight(0xffffff, 0.4)
+                const spotLightMobile = new THREE.PointLight(0xfffff, 0.5)
+                spotLightMobile.position.set(50, 50, 50);
+                spotLightMobile.castShadow = true
+                sceneMobile.add(spotLightMobile)
+                sceneMobile.add(ambientLightMobile)
 
-                const ambientLight = new THREE.AmbientLight(0xffffff, 0.4)
-                const spotLight = new THREE.PointLight(0xfffff, 0.5)
-                spotLight.position.set(50, 50, 50);
-                spotLight.castShadow = true
-                scene.add(spotLight)
-                scene.add(ambientLight)
-
-                const animate = () => {
-                    requestAnimationFrame(animate)
+                const animateMobile = () => {
+                    // requestAnimationFrame(animateMobile)
 
                     cube.rotateX(0.01)
                     cube.rotateY(0.01)
-                    renderer.render(scene, camera)
-                    
+                    renderer.render(sceneMobile, camera)
                 }
 
-                requestAnimationFrame(animate)
+                // requestAnimationFrame(animate)
 
-                return
-            }
+                // return
+            // }
 
 
 
@@ -121,13 +114,6 @@
                     graph_row.push(0)
                 }
                 this.GRAPH.push(graph_row)
-            }
-            
-
-            
-            if (!WebGL.isWebGL2Available()) {
-                console.error(WebGL.getWebGL2ErrorMessage().textContent)
-                return
             }
 
             const raycaster = new THREE.Raycaster();
@@ -160,10 +146,6 @@
             tileArray[this.START[0]][this.START[1]].userData['type'] = 'start'
             tileArray[this.END[0]][this.END[1]].userData['type'] = 'end'
             let answerLine: any = null
-            
-            camera.position.set(-15, 25, 10);
-            controls.update();
-            scene.background = new THREE.Color(0x181818)
 
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.4)
             const spotLight = new THREE.PointLight(0xfffff, 0.5)
@@ -175,7 +157,7 @@
             const clock = new THREE.Clock()
             let iter: any = null
             const animate = () => {
-                requestAnimationFrame(animate)
+                // requestAnimationFrame(animate)
 
                 if (this.CALCULATE) {
                     if (!iter) {
@@ -220,6 +202,8 @@
                                     }
                                 }
                                 if (points.length > 0) {
+                                    points.push(new THREE.Vector3(xOffset * (this.START[0] - 5), 1, zOffset * (this.START[1] - 5)))
+                                    points.unshift(new THREE.Vector3(xOffset * (this.END[0] - 5), 1, zOffset * (this.END[1] - 5)))
                                     const geometry = new THREE.BufferGeometry().setFromPoints(points)
                                     const material = new THREE.LineBasicMaterial({color: 0xffffff})
                                     answerLine = new THREE.Line(geometry, material)
@@ -255,6 +239,7 @@
 
                 const intersections = raycaster.intersectObjects(scene.children)
                 if (intersections.length > 0) {
+                    //@ts-expect-error
                     intersections[0].object.material.color.set(TILE_COLORS['hover'])
                 }
 
@@ -268,6 +253,9 @@
             }
 
             const onMouseDown = (event: MouseEvent) => {
+                if (this.CALCULATE) { // no interaction while calculating
+                    return
+                }
                 pointer.x = (event.clientX / window.innerWidth) * 2 - 1
                 pointer.y =  -(event.clientY / window.innerHeight) * 2 + 1
                 raycaster.setFromCamera(pointer, camera)
@@ -293,9 +281,39 @@
                 }
             }
 
+            const onWindowResize = () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                let curr_animate;
+                if (window.innerWidth > 1024) {
+                    curr_animate = animate;
+                    camera.position.set(-15, 25, 10);
+                    controls.update();
+                } else {
+                    curr_animate = animateMobile;
+                    camera.position.set(0, 0, 5);
+                    controls.update();
+                }
+                renderer.setAnimationLoop(curr_animate)
+            }
+
+            window.addEventListener('resize', onWindowResize, false);
             window.addEventListener('pointermove', onPointerMove, false);
             window.addEventListener('mousedown', onMouseDown, false);
-            requestAnimationFrame(animate)
+            // requestAnimationFrame(animate)
+
+            let curr_animate;
+            if (window.innerWidth > 1024) {
+                curr_animate = animate;
+                camera.position.set(-15, 25, 10);
+                controls.update();
+            } else {
+                curr_animate = animateMobile;
+                camera.position.set(0, 0, 5);
+                controls.update();
+            }
+            renderer.setAnimationLoop(curr_animate)
         },
         methods: {
             toggleType: function (type: 'wall' | 'start' | 'end') {
@@ -304,9 +322,9 @@
             calculate: function () {
                 this.CALCULATE = true
             },
-            showDialog: function () {
-                const dialog = useDialog()
-                dialog.open('TEST')
+            togglePopover: function (event) {
+                const popover: any = this.$refs['popover']
+                popover.toggle(event)
             }
         }
     }
@@ -319,15 +337,34 @@
             Algorithm <SelectButton v-model="ALGO" :options="['bfs', 'dfs', 'astar']" size="small"/>
             <div>
                 <Button class="calculate" @click="calculate()" label="Calculate" :disabled="CALCULATE" size="small"/>
-                <Button ref="question" class="calculate" icon="pi pi-question" :disabled="CALCULATE" size="small"/>
+                <Button ref="question" class="calculate" @click="togglePopover" icon="pi pi-question" :disabled="CALCULATE" size="small"/>
             </div>
         </div>
         <div id="grid" class="grid"></div>
         <Toast position="bottom-center"/>
+        <Popover ref="popover">
+            <div>
+                <h3>Graph Algorithm Visualizer</h3>
+                <ol>
+                    <li>
+                        <div>Place <span class="highlight">Wall</span>, <span class="highlight">Start</span>, and <span class="highlight">End</span> Tiles</div>
+                    </li>
+                    <li>
+                        <div>Select the <span class="highlight">Algorithm</span> to run</div>
+                    </li>
+                    <li>
+                        Calculate!
+                    </li>
+                </ol>
+            </div>
+        </Popover>
     </body>
 </template>
 
 <style scoped>
+ol {
+    padding: 0 2rem;
+}
 .grid {
     width: 100vw;
     height: 100vh;
@@ -352,6 +389,10 @@
 
 .calculate {
     margin: 0.25rem;
+}
+
+.highlight {
+  color: #ed6b35;
 }
 
 @media (max-width: 1024px) {
