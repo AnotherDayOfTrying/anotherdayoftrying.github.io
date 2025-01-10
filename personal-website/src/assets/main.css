@@ -56,6 +56,11 @@
   border: #ed6b35 !important;
 }
 
+.question.p-button {
+  background: #e15a21 !important;
+  border: #ed6b35 !important;
+}
+
 @media (max-width: 1024px) {
   .p-tag {
     font-size: 0.5rem !important;

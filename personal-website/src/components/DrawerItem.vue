@@ -30,6 +30,7 @@ export default {
         <template #container>
             <slot name="drawer-content"></slot>
             <div @click="visible = false; if (callback) callback(false);" class='button-location'>
+                
                 <i class="pi pi-chevron-right"></i>
             </div>
         </template>
@@ -110,21 +111,58 @@ export default {
     animation-iteration-count: infinite;
 }
 
+.button-location > i::after {
+    content: 'back';
+    font-size: 1rem;
+    transform-origin: top center;
+    display: flex-block;
+    float: left;
+    transform: rotate(-90deg) translate(-25%, 0);
+    font-family: Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    'Fira Sans',
+    'Droid Sans',
+    'Helvetica Neue',
+    sans-serif
+}
+
 @keyframes button-wiggle {
-    0%      {padding-right: 1rem}
-    50%     {padding-right: 2rem}
-    100%    {padding-right: 1rem}
+    0%      {padding-right: 0rem}
+    50%     {padding-right: 1rem}
+    100%    {padding-right: 0rem}
 }
 
 @keyframes wiggle {
-    0%      {right: -5rem}
+    0%      {right: -1rem}
     50%     {right: 0rem}
-    100%    {right: -5rem}
+    100%    {right: -1rem}
 }
   
   
-  @media (min-width: 1024px) {
-    
+  @media (max-width: 1024px) {
+    .item {
+        width: 6rem;
+        flex-direction: column;
+        align-items: baseline;
+    }
+
+    .name {
+        margin-left: 0.5rem;
+        font-size: 0.75rem;
+        white-space: nowrap;
+    }
+
+    .button-location > i::after {
+        font-size: 0.5rem;
+        transform-origin: top center;
+        transform: rotate(-90deg) translate(-50%, 50%);
+    }
   }
   </style>
   

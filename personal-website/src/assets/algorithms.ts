@@ -19,7 +19,7 @@ function *dfs(start: position, end: position, graph: graph) {
     const ROWS = graph.length
     const COLS = graph[0].length
     const visited: Set<string> = new Set([JSON.stringify(start)]);
-    const directions = [[0, 1], [1, 0], [0, -1], [-1, 0]]
+    const directions = [[1, 0], [0, 1], [-1, 0], [0, -1]]
 
     function *helper(current_pos: position) {
         yield [current_pos, null]
