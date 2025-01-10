@@ -19,7 +19,7 @@
     }
 
     export default {
-        data (): DATA {
+        data(): DATA {
             return {
                 TOGGLED_TYPE: 'wall',
                 GRAPH: [[]],
@@ -153,8 +153,9 @@
 
             tileArray[this.START[0]][this.START[1]].userData['type'] = 'start'
             tileArray[this.END[0]][this.END[1]].userData['type'] = 'end'
+            let answerLine: any = null
             
-            camera.position.set(10, 25, 15);
+            camera.position.set(-15, 25, 10);
             controls.update();
             scene.background = new THREE.Color(0x181818)
 
@@ -185,6 +186,9 @@
                             }
                         }
                         iter = ALGORITHMS[this.ALGO](this.START, this.END, this.GRAPH)
+                        if (answerLine) {
+                            scene.remove(answerLine)
+                        }
                     }
 
                     const delta = clock.getElapsedTime()
@@ -201,12 +205,20 @@
                                     }
                                 }
                             } else {
+                                const points: any[] = []
                                 for (const position of result.value[1]) {
                                     const [row, col] = JSON.parse(position)
                                     if (!((row == this.START[0] && col == this.START[1]) || (row == this.END[0] && col == this.END[1]))) {
                                         tileArray[row][col].userData['type'] = 'path';
+                                        points.push( new THREE.Vector3(xOffset * (row - 5), 1, zOffset * (col - 5)) );
                                     }
                                 }
+                                if (points) {
+                                    const geometry = new THREE.BufferGeometry().setFromPoints(points)
+                                    const material = new THREE.LineBasicMaterial({color: 0xffffff})
+                                    answerLine = new THREE.Line(geometry, material)
+                                    scene.add(answerLine)
+                                } 
                             } 
                         } else {
                             this.CALCULATE = false;

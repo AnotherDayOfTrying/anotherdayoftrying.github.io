@@ -19,7 +19,7 @@ function *dfs(start: position, end: position, graph: graph) {
     const ROWS = graph.length
     const COLS = graph[0].length
     const visited: Set<string> = new Set([JSON.stringify(start)]);
-    const directions = [[0, 1], [0, -1], [1, 0], [-1, 0]]
+    const directions = [[0, 1], [1, 0], [0, -1], [-1, 0]]
 
     function *helper(current_pos: position) {
         yield [current_pos, null]
@@ -31,11 +31,11 @@ function *dfs(start: position, end: position, graph: graph) {
         for (const direction of directions) {
             const new_x = current_pos[0] + direction[0];
             const new_y = current_pos[1] + direction[1];
-            if (0 <= new_x && new_x < COLS && 0 <= new_y && new_y < ROWS) {
-                if (visited.has(JSON.stringify([new_y, new_x])) || graph[new_y][new_x] === 2) {
+            if (0 <= new_x && new_x < ROWS && 0 <= new_y && new_y < COLS) {
+                if (visited.has(JSON.stringify([new_x, new_y])) || graph[new_x][new_y] === 2) {
                     continue;
                 }
-                const new_position: position = [new_y, new_x]
+                const new_position: position = [new_x, new_y]
                 visited.add(JSON.stringify(new_position));
                 for (let viewed of helper(new_position)) {
                     if (viewed[1]) {
@@ -183,7 +183,7 @@ function tester() {
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             ]
-    const iterator = astar([0, 0], [9, 9], test_graph)
+    const iterator = dfs([0, 0], [9, 9], test_graph)
     for (let visited of iterator) {
         console.log("ITER")
         console.log(visited[0])
