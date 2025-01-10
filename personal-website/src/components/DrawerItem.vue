@@ -30,6 +30,7 @@ export default {
         <template #container>
             <slot name="drawer-content"></slot>
             <div @click="visible = false; if (callback) callback(false);" class='button-location'>
+                
                 <i class="pi pi-chevron-right"></i>
             </div>
         </template>
@@ -108,6 +109,26 @@ export default {
     animation-duration: 4s;
     animation-timing-function: ease-in-out;
     animation-iteration-count: infinite;
+}
+
+.button-location > i::after {
+    content: 'back';
+    transform-origin: top center;
+    display: flex-block;
+    float: left;
+    transform: rotate(-90deg) translate(-25%, 0);
+    font-family: Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    'Fira Sans',
+    'Droid Sans',
+    'Helvetica Neue',
+    sans-serif
 }
 
 @keyframes button-wiggle {

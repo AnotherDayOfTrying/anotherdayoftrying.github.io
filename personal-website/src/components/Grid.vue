@@ -6,6 +6,9 @@
     import {dfs, bfs, astar} from '@/assets/algorithms.ts';
     import SelectButton from 'primevue/selectbutton';
     import Button from 'primevue/button';
+    import Toast from 'primevue/toast'
+    import { useToast } from 'primevue/usetoast';
+    import { useDialog } from 'primevue/usedialog';
 </script>
 
 <script lang="ts">
@@ -16,6 +19,7 @@
         GRAPH: number[][],
         ALGO: string,
         CALCULATE: boolean,
+        popover: boolean
     }
 
     export default {
@@ -27,9 +31,11 @@
                 END: [5, 10],
                 ALGO: 'bfs',
                 CALCULATE: false,
+                popover: false,
             }
         },
         mounted () {
+            const toast = useToast()
             const TILE_COLORS = {
                 'start': 0x008000,
                 'end': 0xcd1c18,
@@ -213,12 +219,18 @@
                                         points.push( new THREE.Vector3(xOffset * (row - 5), 1, zOffset * (col - 5)) );
                                     }
                                 }
-                                if (points) {
+                                if (points.length > 0) {
                                     const geometry = new THREE.BufferGeometry().setFromPoints(points)
                                     const material = new THREE.LineBasicMaterial({color: 0xffffff})
                                     answerLine = new THREE.Line(geometry, material)
                                     scene.add(answerLine)
-                                } 
+                                }
+                                if (result.value[0] === null) {
+                                    toast.add({severity: 'success', summary:'Path Found', life: 1000, closable: false, detail: 'path could be found with given conditions'})
+                                } else {
+                                    toast.add({severity: 'error', summary:'No Path Found', life: 1000, closable: false, detail: 'no path could be found with given conditions'})
+
+                                }
                             } 
                         } else {
                             this.CALCULATE = false;
@@ -262,7 +274,11 @@
                 const intersections = raycaster.intersectObjects(scene.children)
                 if (intersections.length > 0) {
                     const object = intersections[0].object;
-                    if (object.userData['type'] != this.TOGGLED_TYPE) {
+                    if (object.userData['type'] == this.TOGGLED_TYPE) { // same type
+                        if (this.TOGGLED_TYPE == 'wall') {
+                            object.userData['type'] = 'default'
+                        }
+                    } else {
                         if (this.TOGGLED_TYPE == 'start') {
                             tileArray[this.START[0]][this.START[1]].userData['type'] = 'default'
                             this.START = object.userData['position']
@@ -270,10 +286,8 @@
                             tileArray[this.END[0]][this.END[1]].userData['type'] = 'default'
                             this.END = object.userData['position']
                         }
-                        object.userData['type'] = this.TOGGLED_TYPE
-                    } else {
-                        if (this.TOGGLED_TYPE == 'wall') {
-                            object.userData['type'] = 'default'
+                        if (object.userData['type'] != 'start' && object.userData['type'] != 'end') {
+                            object.userData['type'] = this.TOGGLED_TYPE
                         }
                     }
                 }
@@ -281,7 +295,6 @@
 
             window.addEventListener('pointermove', onPointerMove, false);
             window.addEventListener('mousedown', onMouseDown, false);
-            console.log("HERE?")
             requestAnimationFrame(animate)
         },
         methods: {
@@ -290,6 +303,10 @@
             },
             calculate: function () {
                 this.CALCULATE = true
+            },
+            showDialog: function () {
+                const dialog = useDialog()
+                dialog.open('TEST')
             }
         }
     }
@@ -300,9 +317,13 @@
         <div id="controls" class="controls">
             Placing <SelectButton v-model="TOGGLED_TYPE" :options="['start', 'end', 'wall']" size="small"/>
             Algorithm <SelectButton v-model="ALGO" :options="['bfs', 'dfs', 'astar']" size="small"/>
-            <Button class="calculate" @click="calculate()" label="Calculate" :disabled="CALCULATE" size="small"/>
+            <div>
+                <Button class="calculate" @click="calculate()" label="Calculate" :disabled="CALCULATE" size="small"/>
+                <Button ref="question" class="calculate" icon="pi pi-question" :disabled="CALCULATE" size="small"/>
+            </div>
         </div>
         <div id="grid" class="grid"></div>
+        <Toast position="bottom-center"/>
     </body>
 </template>
 
@@ -321,8 +342,8 @@
 
 .controls {
     position: absolute;
-    bottom: 0;
-    right: 0;
+    bottom: 1rem;
+    right: 1rem;
     z-index: 2;
     display: flex;
     flex-direction: column;
