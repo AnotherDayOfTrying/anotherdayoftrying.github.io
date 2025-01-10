@@ -389,11 +389,6 @@ a {
   color: #ed6b35;
 }
 
-/* 
-::-webkit-scrollbar {
-    width: 0;
-} */
-
 @media (max-width: 1024px) {
     .github-pointer {
         display: none;
@@ -409,9 +404,7 @@ a {
     }
 
     .project-card > a > h1 {
-        /* bottom: 2em; */
         font-size: 1.5em;
-        /* white-space: nowrap; */
     }
 
     .project-card > a > p {
