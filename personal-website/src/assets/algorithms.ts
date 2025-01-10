@@ -170,36 +170,8 @@ function *astar(start: position, end: position, graph: graph) {
 }
 
 
-function tester() {
-    const test_graph: graph = [
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            ]
-    const iterator = dfs([0, 0], [9, 9], test_graph)
-    for (let visited of iterator) {
-        console.log("ITER")
-        console.log(visited[0])
-        if (!visited[0]) {
-            console.log("FINISHED WITH PATH")
-            console.log(visited[1])
-        }
-    }    
-}
-
-
-
-
 export {
     dfs,
     bfs,
     astar,
-    tester
 }

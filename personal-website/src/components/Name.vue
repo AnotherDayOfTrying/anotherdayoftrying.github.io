@@ -78,7 +78,6 @@ h1 {
     right: 5vw;
     width: 30vw;
     height: 20px;
-    /* background-color: ; */
     display: flex;
     place-content: center;
     z-index: 9999;
