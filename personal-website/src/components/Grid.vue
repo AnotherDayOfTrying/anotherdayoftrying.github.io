@@ -17,6 +17,7 @@
         START: [number, number],
         END: [number, number],
         GRAPH: number[][],
+        GRAPH_TILES: any[][],
         ALGO: string,
         CALCULATE: boolean,
         popover: boolean
@@ -27,6 +28,7 @@
             return {
                 TOGGLED_TYPE: 'wall',
                 GRAPH: [[]],
+                GRAPH_TILES: [[]],
                 START: [5, 0],
                 END: [5, 10],
                 ALGO: 'bfs',
@@ -65,44 +67,33 @@
             sceneMobile.background = new THREE.Color(0x181818)
             scene.background = new THREE.Color(0x181818)
 
+            const loader = new GLTFLoader()
+            loader.load('./test_model.glb', (data) => {
+                sceneMobile.add(data.scene)
+            })
+            const geometry = new THREE.BoxGeometry(1, 1, 1);
+            const material = new THREE.MeshBasicMaterial( {color: TILE_COLORS['default']} )
+            const cube = new THREE.Mesh( geometry, material )
+            sceneMobile.add(cube)
 
-            // if (window.innerWidth < 1024) {
-                const loader = new GLTFLoader()
-                loader.load('./test_model.glb', (data) => {
-                    sceneMobile.add(data.scene)
-                })
-                const geometry = new THREE.BoxGeometry(1, 1, 1);
-                const material = new THREE.MeshBasicMaterial( {color: TILE_COLORS['default']} )
-                const cube = new THREE.Mesh( geometry, material )
-                sceneMobile.add(cube)
+            const ambientLightMobile = new THREE.AmbientLight(0xffffff, 0.4)
+            const spotLightMobile = new THREE.PointLight(0xfffff, 0.5)
+            spotLightMobile.position.set(50, 50, 50);
+            spotLightMobile.castShadow = true
+            sceneMobile.add(spotLightMobile)
+            sceneMobile.add(ambientLightMobile)
 
-                const ambientLightMobile = new THREE.AmbientLight(0xffffff, 0.4)
-                const spotLightMobile = new THREE.PointLight(0xfffff, 0.5)
-                spotLightMobile.position.set(50, 50, 50);
-                spotLightMobile.castShadow = true
-                sceneMobile.add(spotLightMobile)
-                sceneMobile.add(ambientLightMobile)
+            const animateMobile = () => {
 
-                const animateMobile = () => {
-                    // requestAnimationFrame(animateMobile)
-
-                    cube.rotateX(0.01)
-                    cube.rotateY(0.01)
-                    renderer.render(sceneMobile, camera)
-                }
-
-                // requestAnimationFrame(animate)
-
-                // return
-            // }
-
-
-
+                cube.rotateX(0.01)
+                cube.rotateY(0.01)
+                renderer.render(sceneMobile, camera)
+            }
 
             const ROWS = 11;
             const COLS = 11;
             const ALGORITHMS = {
-                'astar': astar,
+                'A*': astar,
                 'dfs': dfs,
                 'bfs': bfs
             }
@@ -145,6 +136,7 @@
 
             tileArray[this.START[0]][this.START[1]].userData['type'] = 'start'
             tileArray[this.END[0]][this.END[1]].userData['type'] = 'end'
+            this.GRAPH_TILES = tileArray
             let answerLine: any = null
 
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.4)
@@ -157,7 +149,6 @@
             const clock = new THREE.Clock()
             let iter: any = null
             const animate = () => {
-                // requestAnimationFrame(animate)
 
                 if (this.CALCULATE) {
                     if (!iter) {
@@ -192,7 +183,7 @@
                                         tileArray[row][col].userData['type'] = 'traversed';
                                     }
                                 }
-                            } else {
+                            } else if (result.value[1]) {
                                 const points: any[] = []
                                 for (const position of result.value[1]) {
                                     const [row, col] = JSON.parse(position)
@@ -201,21 +192,18 @@
                                         points.push( new THREE.Vector3(xOffset * (row - 5), 1, zOffset * (col - 5)) );
                                     }
                                 }
-                                if (points.length > 0) {
-                                    points.push(new THREE.Vector3(xOffset * (this.START[0] - 5), 1, zOffset * (this.START[1] - 5)))
-                                    points.unshift(new THREE.Vector3(xOffset * (this.END[0] - 5), 1, zOffset * (this.END[1] - 5)))
-                                    const geometry = new THREE.BufferGeometry().setFromPoints(points)
-                                    const material = new THREE.LineBasicMaterial({color: 0xffffff})
-                                    answerLine = new THREE.Line(geometry, material)
-                                    scene.add(answerLine)
-                                }
-                                if (result.value[0] === null) {
-                                    toast.add({severity: 'success', summary:'Path Found', life: 1000, closable: false, detail: 'path could be found with given conditions'})
-                                } else {
-                                    toast.add({severity: 'error', summary:'No Path Found', life: 1000, closable: false, detail: 'no path could be found with given conditions'})
 
-                                }
-                            } 
+                                points.push(new THREE.Vector3(xOffset * (this.START[0] - 5), 1, zOffset * (this.START[1] - 5)))
+                                points.unshift(new THREE.Vector3(xOffset * (this.END[0] - 5), 1, zOffset * (this.END[1] - 5)))
+                                const geometry = new THREE.BufferGeometry().setFromPoints(points)
+                                const material = new THREE.LineBasicMaterial({color: 0xffffff})
+                                answerLine = new THREE.Line(geometry, material)
+                                scene.add(answerLine)
+                                
+                                toast.add({severity: 'success', summary:'Path Found', life: 1000, closable: false, detail: 'path could be found with given conditions'})
+                            } else {
+                                toast.add({severity: 'error', summary:'No Path Found', life: 1000, closable: false, detail: 'no path could be found with given conditions'})
+                            }
                         } else {
                             this.CALCULATE = false;
                             iter = null
@@ -249,7 +237,7 @@
 
             const onPointerMove = (event: MouseEvent) => {
                 pointer.x = (event.clientX / window.innerWidth) * 2 - 1
-                pointer.y =  -(event.clientY / window.innerHeight) * 2 + 1
+                pointer.y = -(event.clientY / window.innerHeight) * 2 + 1
             }
 
             const onMouseDown = (event: MouseEvent) => {
@@ -301,7 +289,6 @@
             window.addEventListener('resize', onWindowResize, false);
             window.addEventListener('pointermove', onPointerMove, false);
             window.addEventListener('mousedown', onMouseDown, false);
-            // requestAnimationFrame(animate)
 
             let curr_animate;
             if (window.innerWidth > 1024) {
@@ -325,6 +312,30 @@
             togglePopover: function (event) {
                 const popover: any = this.$refs['popover']
                 popover.toggle(event)
+            },
+            random: function() {
+                const ROWS = this.GRAPH_TILES.length
+                const COLS = this.GRAPH_TILES[0].length
+                for (let row = 0; row < ROWS; row++) {
+                    for (let col = 0; col < COLS; col++) {
+                        this.GRAPH_TILES[row][col].userData.type = 'default'
+                    }
+                }
+                this.START = [Math.floor(Math.random() * 11), Math.floor(Math.random() * 11)]
+                this.END = [Math.floor(Math.random() * 11), Math.floor(Math.random() * 11)]
+                while (JSON.stringify(this.START) == JSON.stringify(this.END)) {
+                    this.START = [Math.floor(Math.random() * 11), Math.floor(Math.random() * 11)]
+                    this.END = [Math.floor(Math.random() * 11), Math.floor(Math.random() * 11)]
+                }
+                this.GRAPH_TILES[this.START[0]][this.START[1]].userData.type = 'start'
+                this.GRAPH_TILES[this.END[0]][this.END[1]].userData.type = 'end'
+                for (let row = 0; row < ROWS; row++) {
+                    for (let col = 0; col < COLS; col++) {
+                        if (Math.random() > 0.75 && (row != this.START[0] || col != this.START[1]) && (row != this.END[0] || col != this.END[1])) {
+                            this.GRAPH_TILES[row][col].userData.type = 'wall'
+                        }
+                    }
+                }
             }
         }
     }
@@ -334,9 +345,10 @@
     <body>
         <div id="controls" class="controls">
             Placing <SelectButton v-model="TOGGLED_TYPE" :options="['start', 'end', 'wall']" size="small"/>
-            Algorithm <SelectButton v-model="ALGO" :options="['bfs', 'dfs', 'astar']" size="small"/>
+            Algorithm <SelectButton v-model="ALGO" :options="['bfs', 'dfs', 'A*']" size="small"/>
             <div>
                 <Button class="calculate" @click="calculate()" label="Calculate" :disabled="CALCULATE" size="small"/>
+                <Button class="calculate" @click="random()" label="Random" :disabled="CALCULATE" size="small"/>
                 <Button ref="question" class="calculate" @click="togglePopover" icon="pi pi-question" :disabled="CALCULATE" size="small"/>
             </div>
         </div>

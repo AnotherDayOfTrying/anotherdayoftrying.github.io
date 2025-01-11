@@ -20,6 +20,7 @@ function *dfs(start: position, end: position, graph: graph) {
     const COLS = graph[0].length
     const visited: Set<string> = new Set([JSON.stringify(start)]);
     const directions = [[1, 0], [0, 1], [-1, 0], [0, -1]]
+    let solution = false
 
     function *helper(current_pos: position) {
         yield [current_pos, null]
@@ -51,11 +52,14 @@ function *dfs(start: position, end: position, graph: graph) {
     for (let viewed of helper(start)) {
         if (viewed[1]) {
             yield [null, viewed[1]]
+            solution = true
             return
         }
         yield [[JSON.stringify(viewed[0])], viewed[1]]
     }
-    
+    if (!solution) {
+        yield [null, null]
+    }
 }
 
 // We want to yield what we have visited, and return the path the the end if one exists
@@ -108,7 +112,7 @@ function *bfs(start: position, end: position, graph: graph) {
         }
         yield [newlyVisited, null]
     }
-    yield [null, []]
+    yield [null, null]
     return //no answer exists
 }
 
@@ -165,7 +169,7 @@ function *astar(start: position, end: position, graph: graph) {
         
         yield [newlyVisited, null]
     }
-    yield [null, []]
+    yield [null, null]
     return //no answer exists
 }
 
