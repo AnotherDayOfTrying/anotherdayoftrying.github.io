@@ -68,25 +68,29 @@
             scene.background = new THREE.Color(0x181818)
 
             const loader = new GLTFLoader()
-            loader.load('./test_model.glb', (data) => {
-                sceneMobile.add(data.scene)
-            })
-            const geometry = new THREE.BoxGeometry(1, 1, 1);
-            const material = new THREE.MeshBasicMaterial( {color: TILE_COLORS['default']} )
-            const cube = new THREE.Mesh( geometry, material )
-            sceneMobile.add(cube)
+            let wireframe: THREE.LineSegments<THREE.EdgesGeometry<any>, THREE.LineBasicMaterial, THREE.Object3DEventMap> | null = null;
+            loader.load('./cassette.glb', (data) => {
+                //@ts-expect-error
+                const cassettePlayer = data.scene.children[0].geometry
+                const geometry = new THREE.EdgesGeometry( cassettePlayer )
+                const material = new THREE.LineBasicMaterial( { color: 0xed6b35, linewidth: 2 } )
 
-            const ambientLightMobile = new THREE.AmbientLight(0xffffff, 0.4)
+                wireframe = new THREE.LineSegments( geometry, material )
+                wireframe.rotateY(90)
+                sceneMobile.add( wireframe )
+            })
+
+            const ambientLightMobile = new THREE.AmbientLight(0xffffff, 1)
             const spotLightMobile = new THREE.PointLight(0xfffff, 0.5)
-            spotLightMobile.position.set(50, 50, 50);
+            spotLightMobile.position.set(10, 10, 10);
             spotLightMobile.castShadow = true
             sceneMobile.add(spotLightMobile)
             sceneMobile.add(ambientLightMobile)
-
             const animateMobile = () => {
-
-                cube.rotateX(0.01)
-                cube.rotateY(0.01)
+                if (wireframe) {
+                    wireframe.rotateY(0.01)
+                    wireframe.rotateZ(0.01)                    
+                }
                 renderer.render(sceneMobile, camera)
             }
 
@@ -280,7 +284,7 @@
                     controls.update();
                 } else {
                     curr_animate = animateMobile;
-                    camera.position.set(0, 0, 5);
+                    camera.position.set(0, 0, 15);
                     controls.update();
                 }
                 renderer.setAnimationLoop(curr_animate)
@@ -297,7 +301,7 @@
                 controls.update();
             } else {
                 curr_animate = animateMobile;
-                camera.position.set(0, 0, 5);
+                camera.position.set(0, 0, 15);
                 controls.update();
             }
             renderer.setAnimationLoop(curr_animate)

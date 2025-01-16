@@ -196,9 +196,9 @@ export default {
                             <template #item="project">
                                 <div class="project-card">
                                     <a :href="project.data.url" >
-                                        <img :src="project.data.image" />
+                                        <img :src="project.data.image">
                                         <h1 :style="project.data.color">{{ project.data.name }}</h1>
-                                        <p :style="project.data.color">
+                                        <p class="description">
                                             {{ project.data.description }} <br>
                                             Skills: {{ project.data.skills }}
                                         </p>
@@ -236,6 +236,12 @@ export default {
 <style scoped>
 .about-me-h2 {
     font-family: 'SaucerBB';
+}
+
+.description {
+    background-color: #00000099;
+    border-radius: 5px;
+    padding: 4px;
 }
 
 .screen {
@@ -405,10 +411,14 @@ a {
 
     .project-card > a > h1 {
         font-size: 1.5em;
+        bottom: 4.5rem;
     }
 
     .project-card > a > p {
-        display: none;
+        position: static;
+        font-size: x-small;
+        white-space: wrap;
+        text-decoration-style: none;
     }
 
     .about-me-card {
